@@ -34,7 +34,7 @@ workflow {
 // Function to print help message
 def helpMessage() {
     log.info"""
-    Usage:
+    Usage:ll
     nextflow run main.nf --organism "Homo sapiens" --ensembl_version 108 --download_method ensembl
 
     Required arguments:
