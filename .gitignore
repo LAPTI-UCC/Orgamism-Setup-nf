@@ -199,3 +199,5 @@ data/
 work/
 
 *.code-workspace
+results/
+conda_cache/

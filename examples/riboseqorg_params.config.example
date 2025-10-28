@@ -1,0 +1,91 @@
+// Example auto-generated params.config for riboseqorg-nf pipeline
+// This is what the pipeline will generate automatically
+
+params {
+    // =====================================
+    // Output Directory
+    // =====================================
+    outdir = "./results"
+
+    // =====================================
+    // Reference Genome Paths
+    // =====================================
+    // STAR index for genome alignment
+    star_index = "/path/to/results/saccharomyces_cerevisiae/112/star_index"
+
+    // Bowtie index for transcriptome alignment
+    bowtie_index = "/path/to/results/saccharomyces_cerevisiae/112/bowtie_index"
+
+    // Bowtie index for rRNA filtering
+    rRNA_index = "/path/to/results/saccharomyces_cerevisiae/112/rRNA_index"
+
+    // GTF annotation file
+    gtf = "/path/to/results/saccharomyces_cerevisiae/112/Saccharomyces_cerevisiae.R64-1-1.112.gtf"
+
+    // Genome FASTA file
+    genome_fasta = "/path/to/results/saccharomyces_cerevisiae/112/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa"
+
+    // Chromosome sizes file
+    chrom_sizes_file = "/path/to/results/saccharomyces_cerevisiae/112/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.chrom.sizes"
+
+    // RiboMetric annotation file
+    ribometric_annotation = "/path/to/results/saccharomyces_cerevisiae/112/ribometric.tsv"
+
+    // Annotation SQLite database
+    annotation_sqlite = "/path/to/results/saccharomyces_cerevisiae/112/Saccharomyces_cerevisiae.R64-1-1.112.sqlite"
+
+    // =====================================
+    // Alignment Parameters
+    // =====================================
+    // Maximum number of mismatches allowed in alignment
+    mismatches = 3
+
+    // Alignment type: "EndToEnd" or "Local"
+    alignment_type = "EndToEnd"
+
+    // Allow alignments spanning introns
+    allow_introns = true
+
+    // Maximum number of multimapper alignments to keep
+    max_multimappers = 10
+
+    // =====================================
+    // Sample Sheet
+    // =====================================
+    // Path to sample sheet CSV file
+    // Required columns: sample_name, fastq (or fastq_1, fastq_2 for paired-end)
+    sample_sheet = "${projectDir}/sample_sheet.csv"
+
+    // =====================================
+    // Adapter Finding
+    // =====================================
+    // Automatically detect adapter sequences using architecture detection
+    use_architecture_detection = false
+
+    // =====================================
+    // Data Fetching
+    // =====================================
+    // Fetch data from external sources (e.g., SRA)
+    fetch = false
+
+    // Force re-fetching of data even if it already exists
+    force_fetch = false
+
+    // Path to collapsed read files (optional)
+    // collapsed_read_path = "/path/to/collapsed/reads"
+
+    // Header pattern for collapsed reads (optional)
+    // collapsed_read_header_pattern = ".*"
+
+    // =====================================
+    // Output Options
+    // =====================================
+    // Save BAM files from STAR transcriptome alignment
+    save_star_transcriptome_bam = false
+
+    // =====================================
+    // Trimming
+    // =====================================
+    // Number of bases to trim from the front of reads
+    trim_front = 0
+}
