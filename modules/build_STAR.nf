@@ -5,13 +5,15 @@ process PREPARE_STAR_GENOME_INDEX {
     publishDir "${params.base}/${organism}/${ensembl_version}", mode: 'copy'
 
 
-    conda "bioconda::star=2.7.10b"
+    conda "bioconda::star=2.7.11b"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/star:2.7.10b--h9ee0642_0' :
         'biocontainers/star:2.7.10b--h9ee0642_0' }"
 
     input:
     path genome
+    val organism
+    val ensembl_version
 
     output:
     path 'star_index', emit: index
@@ -22,7 +24,10 @@ process PREPARE_STAR_GENOME_INDEX {
 
     script:
     def args = task.ext.args ?: ''
-    def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
+    // Only set memory limit if explicitly provided and reasonable (>= 8GB)
+    // Otherwise let STAR use what it needs
+    def memory = (task.memory && task.memory.toGiga() >= 8) ?
+        "--limitGenomeGenerateRAM ${task.memory.toBytes()}" : ''
     """
     mkdir -p star_index
 
@@ -37,6 +42,24 @@ process PREPARE_STAR_GENOME_INDEX {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         star: \$(STAR --version | sed -e "s/STAR_//g")
+    END_VERSIONS
+    """
+
+    stub:
+    """
+    mkdir -p star_index
+    touch star_index/SA
+    touch star_index/SAindex
+    touch star_index/Genome
+    touch star_index/chrName.txt
+    touch star_index/chrLength.txt
+    touch star_index/chrStart.txt
+    touch star_index/chrNameLength.txt
+    touch star_index/genomeParameters.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        star: 2.7.10b
     END_VERSIONS
     """
 }

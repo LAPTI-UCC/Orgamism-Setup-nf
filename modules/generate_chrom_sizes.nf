@@ -1,0 +1,52 @@
+
+
+process GENERATE_CHROM_SIZES {
+    tag "$genome"
+    label 'process_low'
+
+    publishDir "${params.base}/${organism}/${version}", mode: 'copy'
+
+    conda "bioconda::samtools=1.22"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
+        'quay.io/biocontainers/samtools:1.17--h00cdaf9_0' }"
+
+    input:
+    path genome
+    val organism
+    val version
+
+    output:
+    path "*.chrom.sizes", emit: chrom_sizes
+    path "versions.yml", emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = genome.baseName
+    """
+    # Generate .fai index file
+    samtools faidx $genome
+
+    # Extract chromosome sizes (columns 1 and 2 from .fai)
+    cut -f1,2 ${genome}.fai > ${prefix}.chrom.sizes
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = genome.baseName
+    """
+    touch ${prefix}.chrom.sizes
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: 1.17
+    END_VERSIONS
+    """
+}

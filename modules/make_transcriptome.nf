@@ -14,6 +14,8 @@ process MAKE_TRANSCRIPTOME {
     input:
     path(gtf)
     path(fasta)
+    val organism
+    val ensembl_version
 
     output:
     path("*.fa"), emit: transcripts
@@ -35,6 +37,17 @@ process MAKE_TRANSCRIPTOME {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         gffread: \$(gffread --version 2>&1)
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: fasta.baseName
+    """
+    touch ${prefix}.transcripts.fa
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gffread: 0.12.7
     END_VERSIONS
     """
 }

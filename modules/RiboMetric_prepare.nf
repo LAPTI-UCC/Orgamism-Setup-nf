@@ -5,12 +5,14 @@ process RIBOMETRIC_PREPARE {
 
     publishDir "${params.base}/${organism}/${ensembl_version}", mode: 'copy'
 
-    conda conda/ribometric.yml
+    conda "conda/ribometric.yml"
     container "community.wave.seqera.io/library/pip_ribometric:6264b49edef91023"
 
     input:
     path(gtf)
     path(fasta)
+    val organism
+    val ensembl_version
 
     output:
     path("*.tsv"), emit: ribometric_tsv
@@ -28,6 +30,17 @@ process RIBOMETRIC_PREPARE {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         gffread: \$(gffread --version 2>&1)
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: fasta.baseName
+    """
+    touch ${prefix}_ribometric.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gffread: 0.12.7
     END_VERSIONS
     """
 }
