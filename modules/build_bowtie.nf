@@ -8,8 +8,8 @@ process BUILD_BOWTIE_INDEX {
 
     conda "bioconda::bowtie=1.3.1 conda-forge::python_abi=3.9"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bowtie:1.3.0--py38hed8969a_1' :
-        'quay.io/biocontainers/bowtie:1.3.0--py38hed8969a_1' }"
+        'https://depot.galaxyproject.org/singularity/bowtie:1.2.2--py27h2d50403_1' :
+        'quay.io/biocontainers/bowtie:1.2.2--py36h2d50403_1' }"
 
     input:
     path fasta

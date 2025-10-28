@@ -8,8 +8,8 @@ process EXTRACT_RRNA_FROM_GTF {
 
     conda "bioconda::gffread=0.12.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gffread:0.12.7--h9a82719_0' :
-        'quay.io/biocontainers/gffread:0.12.7--h9a82719_0' }"
+        'https://depot.galaxyproject.org/singularity/gffread:0.12.7--hd03093a_1' :
+        'quay.io/biocontainers/gffread:0.12.7--hd03093a_1' }"
 
     input:
     path gtf
