@@ -8,8 +8,8 @@ process GENERATE_CHROM_SIZES {
 
     conda "bioconda::samtools=1.22"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
-        'quay.io/biocontainers/samtools:1.17--h00cdaf9_0' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.21--h96c455f_1' :
+        'quay.io/biocontainers/samtools:1.21--h96c455f_1' }"
 
     input:
     path genome
