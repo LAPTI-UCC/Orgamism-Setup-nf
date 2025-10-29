@@ -79,7 +79,7 @@ workflow {
             genome_fasta,
             GENERATE_CHROM_SIZES.out.chrom_sizes,
             RIBOMETRIC_PREPARE.out.ribometric_tsv,
-            CREATE_ANNOTATION_SQLITE.out.sqlite_db,
+            // CREATE_ANNOTATION_SQLITE.out.sqlite_db,
             organism_normalized,
             version
         )

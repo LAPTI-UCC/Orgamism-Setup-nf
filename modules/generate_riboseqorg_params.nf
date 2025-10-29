@@ -14,7 +14,7 @@ process GENERATE_RIBOSEQORG_PARAMS {
     path genome_fasta
     path chrom_sizes
     path ribometric_tsv
-    path annotation_sqlite
+    // path annotation_sqlite
     val organism
     val ensembl_version
 
@@ -39,7 +39,7 @@ process GENERATE_RIBOSEQORG_PARAMS {
         --genome_fasta ${absolute_base}/${genome_fasta} \\
         --chrom_sizes ${absolute_base}/${chrom_sizes} \\
         --ribometric_tsv ${absolute_base}/${ribometric_tsv} \\
-        --annotation_sqlite ${absolute_base}/${annotation_sqlite} \\
+        # --annotation_sqlite ${absolute_base}/${annotation_sqlite} \\
         --organism "${organism}" \\
         --ensembl_version "${ensembl_version}" \\
         --output ${output_file}
@@ -68,7 +68,7 @@ params {
     genome_fasta = "${absolute_base}/${genome_fasta}"
     chrom_sizes_file = "${absolute_base}/${chrom_sizes}"
     ribometric_annotation = "${absolute_base}/${ribometric_tsv}"
-    annotation_sqlite = "${absolute_base}/${annotation_sqlite}"
+    #annotation_sqlite = "${absolute_base}/${annotation_sqlite}"
 
     // Alignment Parameters
     mismatches = 3

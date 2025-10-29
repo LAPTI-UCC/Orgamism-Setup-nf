@@ -5,8 +5,8 @@ process RIBOMETRIC_PREPARE {
 
     publishDir "${params.base}/${organism}/${ensembl_version}", mode: 'copy'
 
-    conda "conda/ribometric.yml"
-    container "oras://community.wave.seqera.io/library/pip_ribometric:b8a9b78dd175ad9b"
+    conda "${projectDir}/conda/ribometric.yml"
+    // container "community.wave.seqera.io/library/pip_ribometric:6264b49edef91023"
 
     input:
     path(gtf)
