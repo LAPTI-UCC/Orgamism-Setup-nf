@@ -53,7 +53,7 @@ workflow {
         MAKE_TRANSCRIPTOME(genome_gtf, genome_fasta, organism_normalized, version)
         BUILD_BOWTIE_INDEX(MAKE_TRANSCRIPTOME.out.transcripts)
         GENERATE_CHROM_SIZES(genome_fasta, organism_normalized, version)
-        CREATE_ANNOTATION_SQLITE(genome_gtf, organism_normalized, version)
+        CREATE_ANNOTATION_SQLITE(genome_gtf, MAKE_TRANSCRIPTOME.out.transcripts, organism_normalized, version)
         RIBOMETRIC_PREPARE(genome_gtf, genome_fasta, organism_normalized, version)
 
         // rRNA handling - choose method based on params.rrna_source

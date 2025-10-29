@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 # Python3 script which takes in an annotation file(gtf/gff3) and a transcriptomic fasta file
 # and produces an sqlite file which can be uploaded to Trips-Viz
 # All co-ordinates produced are 1 based
@@ -23,10 +26,53 @@ annotation_file = open(sys.argv[2],"r")
 fasta_file = open(sys.argv[3],"r")
 #This value will be added used to create UTRs of this length, useful when looking at transcriptomes without annotated UTRs
 pseudo_utr_len = int(sys.argv[4])
-#An example of a transcript_id from the annotation file, e.g ENST000000123456
-user_transcript_id = sys.argv[5]
-#An example of a gene name from the annotation file
-user_gene_name = sys.argv[6]
+
+# Auto-detect transcript_id and gene_name from GTF (Ensembl format)
+print("Auto-detecting transcript_id and gene_name examples from GTF...")
+user_transcript_id = None
+user_gene_name = None
+
+annotation_file_temp = open(sys.argv[2],"r")
+for line in annotation_file_temp:
+	if line.startswith("#"):
+		continue
+	if 'transcript_id' in line and user_transcript_id is None:
+		# Extract transcript_id
+		parts = line.split('transcript_id "')
+		if len(parts) > 1:
+			user_transcript_id = parts[1].split('"')[0]
+	if 'gene_name' in line and user_gene_name is None:
+		# Extract gene_name
+		parts = line.split('gene_name "')
+		if len(parts) > 1:
+			user_gene_name = parts[1].split('"')[0]
+	# If we found both, we can stop
+	if user_transcript_id and user_gene_name:
+		break
+annotation_file_temp.close()
+
+# Fallback to gene_id if gene_name not found
+if user_gene_name is None:
+	annotation_file_temp = open(sys.argv[2],"r")
+	for line in annotation_file_temp:
+		if line.startswith("#"):
+			continue
+		if 'gene_id' in line:
+			parts = line.split('gene_id "')
+			if len(parts) > 1:
+				user_gene_name = parts[1].split('"')[0]
+				break
+	annotation_file_temp.close()
+
+if user_transcript_id is None or user_gene_name is None:
+	print("ERROR: Could not auto-detect transcript_id or gene_name from GTF file")
+	print(f"Found transcript_id: {user_transcript_id}")
+	print(f"Found gene_name: {user_gene_name}")
+	sys.exit(1)
+
+print(f"Detected transcript_id example: {user_transcript_id}")
+print(f"Detected gene_name example: {user_gene_name}")
+
 # Set to true if transcript version is included in transcript_id, e.g: ENST000000123456.1
 TRAN_VERSION = False
 

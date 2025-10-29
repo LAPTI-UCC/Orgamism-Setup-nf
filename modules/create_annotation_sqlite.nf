@@ -1,18 +1,19 @@
 
 
 process CREATE_ANNOTATION_SQLITE {
-    tag "$gtf"
+    tag "$organism"
     label 'process_medium'
 
     publishDir "${params.base}/${organism}/${version}", mode: 'copy'
 
-    conda "bioconda::gffutils=0.12"
+    conda "conda-forge::python=3.9 conda-forge::intervaltree=3.1.0 conda-forge::sqlitedict=2.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gffutils:0.12--pyh7cba7a3_0' :
-        'quay.io/biocontainers/gffutils:0.12--pyh7cba7a3_0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:ab110436faf952a33575c64dd74615a84011450b-0' :
+        'biocontainers/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:ab110436faf952a33575c64dd74615a84011450b-0' }"
 
     input:
     path gtf
+    path transcriptome_fasta
     val organism
     val version
 
@@ -25,44 +26,18 @@ process CREATE_ANNOTATION_SQLITE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = gtf.baseName
+    def pseudo_utr_len = task.ext.pseudo_utr_len ?: 0
     """
-    # Create SQLite database from GTF using gffutils
-    # TODO: Adjust merge_strategy and other parameters based on your needs
-    # Common merge strategies: 'create_unique', 'merge', 'error', 'warning', 'replace'
-
-    python << EOF
-import gffutils
-import sys
-
-try:
-    # Create database from GTF file
-    # disable_infer_genes=True if your GTF already has gene features
-    # disable_infer_transcripts=True if your GTF already has transcript features
-    db = gffutils.create_db(
-        data='$gtf',
-        dbfn='${prefix}.sqlite',
-        force=True,
-        keep_order=True,
-        merge_strategy='merge',
-        sort_attribute_values=True,
-        disable_infer_genes=False,
-        disable_infer_transcripts=False
-    )
-
-    # Print summary statistics
-    print(f"Database created successfully: ${prefix}.sqlite")
-    print(f"Total features: {db.count_features_of_type()}")
-
-except Exception as e:
-    print(f"Error creating database: {e}", file=sys.stderr)
-    sys.exit(1)
-EOF
+    create_annotation_sqlite.py \\
+        ${organism} \\
+        ${gtf} \\
+        ${transcriptome_fasta} \\
+        ${pseudo_utr_len}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        gffutils: \$(python -c "import gffutils; print(gffutils.__version__)")
         python: \$(python --version 2>&1 | sed 's/Python //')
+        intervaltree: \$(python -c "import intervaltree; print(intervaltree.__version__)")
     END_VERSIONS
     """
 
