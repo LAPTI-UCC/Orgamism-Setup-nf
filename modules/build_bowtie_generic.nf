@@ -27,9 +27,12 @@ process BUILD_BOWTIE_INDEX_GENERIC {
 
     script:
     def args = task.ext.args ?: ''
+    // Optimized for short Ribo-seq reads (20-35nt)
+    // --offrate 0: maximum sensitivity for short reads (larger index)
+    // --ftabchars 5: smaller initial lookup table for short seeds
     """
     mkdir ${index_name}_index
-    bowtie-build $args --threads $task.cpus $fasta ${index_name}_index/${index_name}
+    bowtie-build $args --threads $task.cpus --offrate 0 --ftabchars 5 $fasta ${index_name}_index/${index_name}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
