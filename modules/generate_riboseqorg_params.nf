@@ -15,12 +15,21 @@ process GENERATE_RIBOSEQORG_PARAMS {
     path chrom_sizes
     path ribometric_tsv
     path annotation_sqlite
+    path transcriptome_fasta
     val organism
     val ensembl_version
 
     output:
     path "riboseqorg_params.config", emit: config
     path "versions.yml", emit: versions
+    path star_index, emit: star_index_out
+    path bowtie_index, emit: bowtie_index_out
+    path rrna_index, emit: rrna_index_out
+    path gtf, emit: gtf_out
+    path genome_fasta, emit: genome_fasta_out
+    path chrom_sizes, emit: chrom_sizes_out
+    path ribometric_tsv, emit: ribometric_tsv_out
+    path annotation_sqlite, emit: annotation_sqlite_out
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,7 +42,7 @@ process GENERATE_RIBOSEQORG_PARAMS {
     """
     generate_riboseqorg_config.py \\
         --star_index ${absolute_base}/${star_index} \\
-        --bowtie_index ${absolute_base}/bowtie_index \\
+        --bowtie_index ${absolute_base}/${bowtie_index} \\
         --rrna_index ${absolute_base}/${rrna_index} \\
         --gtf ${absolute_base}/${gtf} \\
         --genome_fasta ${absolute_base}/${genome_fasta} \\

@@ -127,7 +127,7 @@ params {{
     // Data Fetching
     // =====================================
     // Fetch data from external sources (e.g., SRA)
-    fetch = false
+    fetch = true
 
     // Force re-fetching of data even if it already exists
     force_fetch = false
