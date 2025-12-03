@@ -4,6 +4,11 @@ process GENERATE_RIBOSEQORG_PARAMS {
     tag "${organism}_${ensembl_version}"
     label 'process_low'
 
+    conda "conda-forge::python=3.9"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/python:3.9--1' :
+        'biocontainers/python:3.9--1' }"
+
     publishDir "${params.base}/${organism}/${ensembl_version}", mode: 'copy'
 
     input:

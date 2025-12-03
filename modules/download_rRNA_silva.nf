@@ -4,6 +4,11 @@ process DOWNLOAD_RRNA_SILVA {
     tag "SILVA_${params.silva_version}"
     label 'process_low'
 
+    conda "conda-forge::curl=8.4.0"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:1196f19ebf5dec139b02f2b5077300fdd8d0aa94-0' :
+        'biocontainers/mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91:1196f19ebf5dec139b02f2b5077300fdd8d0aa94-0' }"
+
     publishDir "${params.base}/${organism}/${version}", mode: 'copy'
 
     input:

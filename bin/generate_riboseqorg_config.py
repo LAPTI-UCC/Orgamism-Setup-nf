@@ -142,7 +142,7 @@ params {{
     // Output Options
     // =====================================
     // Save BAM files from STAR transcriptome alignment
-    save_star_transcriptome_bam = false
+    save_star_transcriptome_bam = true
 
     // =====================================
     // Trimming

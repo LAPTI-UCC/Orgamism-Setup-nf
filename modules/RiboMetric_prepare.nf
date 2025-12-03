@@ -6,7 +6,7 @@ process RIBOMETRIC_PREPARE {
     publishDir "${params.base}/${organism}/${ensembl_version}", mode: 'copy'
 
     conda "${projectDir}/conda/ribometric.yml"
-    // container "community.wave.seqera.io/library/pip_ribometric:6264b49edef91023"
+    container "ghcr.io/lapti-ucc/riboseqorg-nf-ribometric:latest"
 
     input:
     path(gtf)
